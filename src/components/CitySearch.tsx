@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { AutocompleteDropdown } from './AutocompleteDropdown';
 import { SearchResult } from './SearchResult';
 
@@ -52,17 +53,17 @@ export const CitySearch = () => {
 
     const timeoutId = setTimeout(async () => {
       try {
-        // TODO: Replace with actual API call via Supabase Edge Function
-        const mockOptions: AutocompleteOption[] = [
-          { city: 'Paris', country: 'France', description: 'Paris, France' },
-          { city: 'London', country: 'United Kingdom', description: 'London, United Kingdom' },
-          { city: 'New York', country: 'United States', description: 'New York, United States' },
-        ].filter(option => 
-          option.city.toLowerCase().includes(query.toLowerCase())
-        );
+        const { data, error } = await supabase.functions.invoke('autocomplete-cities', {
+          body: { q: query }
+        });
         
-        setAutocompleteOptions(mockOptions);
-        setShowAutocomplete(mockOptions.length > 0);
+        if (error) {
+          console.error('Autocomplete error:', error);
+          return;
+        }
+        
+        setAutocompleteOptions(data || []);
+        setShowAutocomplete((data || []).length > 0);
       } catch (err) {
         console.error('Autocomplete error:', err);
       }
@@ -87,24 +88,22 @@ export const CitySearch = () => {
     setShowAutocomplete(false);
 
     try {
-      // TODO: Replace with actual API call via Supabase Edge Function
-      // For now, showing mock data
-      const mockResponse: SearchResponse = {
-        city: searchTerm,
-        country: {
-          name: 'France',
-          code: 'FR'
-        },
-        alternatives: searchTerm.toLowerCase() === 'springfield' ? [
-          { city: 'Springfield', country: { name: 'United States', code: 'US' } },
-          { city: 'Springfield', country: { name: 'Canada', code: 'CA' } }
-        ] : undefined
-      };
+      const { data, error } = await supabase.functions.invoke('resolve-city', {
+        body: { city: searchTerm }
+      });
+      
+      if (error) {
+        throw new Error(error.message || 'Failed to resolve city');
+      }
+      
+      if (!data) {
+        throw new Error('No data received from server');
+      }
 
-      setResult(mockResponse);
+      setResult(data);
       toast({
         title: "City found!",
-        description: `${mockResponse.city}, ${mockResponse.country.name}`,
+        description: `${data.city}, ${data.country.name}`,
       });
     } catch (err) {
       setError('Failed to find city. Please try again.');
