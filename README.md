@@ -6,7 +6,7 @@ A web application that allows users to find the country of any city using Google
 
 - **Lovable Preview**: [https://lovable.dev/projects/f6295844-2065-4ed1-9740-964901c9808b](https://lovable.dev/projects/f6295844-2065-4ed1-9740-964901c9808b)
 - **GitHub Repository**: [https://github.com/sems-polat/city-country-quest](https://github.com/sems-polat/city-country-quest)
-- **Netlify Deployment**: [Your Netlify URL here]
+- **Netlify Deployment**: [https://city-and-country.netlify.app/](https://city-and-country.netlify.app/)
 
 ## 👥 Contributors
 
