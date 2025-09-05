@@ -30,8 +30,7 @@ serve(async (req) => {
   }
 
   try {
-    const url = new URL(req.url);
-    const city = url.searchParams.get('city');
+    const { city } = await req.json();
 
     if (!city || city.trim().length < 2) {
       return new Response(
