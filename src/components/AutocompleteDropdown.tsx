@@ -60,9 +60,6 @@ export const AutocompleteDropdown = ({
               <div className="font-medium text-foreground truncate">
                 {option.city}
               </div>
-              <div className="text-sm text-muted-foreground truncate">
-                {option.country}
-              </div>
             </div>
             <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
           </button>
