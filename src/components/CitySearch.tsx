@@ -107,9 +107,10 @@ export const CitySearch = () => {
       });
     } catch (err) {
       setError('Failed to find city. Please try again.');
+      console.error('City search error:', err);
       toast({
         title: "Search failed",
-        description: "Failed to find city. Please try again.",
+        description: err instanceof Error ? err.message : "Failed to find city. Please try again.",
         variant: "destructive",
       });
     } finally {

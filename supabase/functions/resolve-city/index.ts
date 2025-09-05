@@ -44,7 +44,7 @@ serve(async (req) => {
 
     const googleMapsApiKey = Deno.env.get('GOOGLE_MAPS_API_KEY');
     if (!googleMapsApiKey) {
-      console.error('GOOGLE_MAPS_API_KEY not found');
+      console.error('GOOGLE_MAPS_API_KEY not found in environment variables');
       return new Response(
         JSON.stringify({ error: 'API configuration error' }),
         { 
@@ -53,6 +53,8 @@ serve(async (req) => {
         }
       );
     }
+
+    console.log('Processing city search request for:', city);
 
     // First try with locality type restriction
     const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&types=locality&key=${googleMapsApiKey}`;
